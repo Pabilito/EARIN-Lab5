@@ -10,8 +10,8 @@ dataset = pd.read_csv("Iris.csv")
 toPredict = np.array(dataset['Species'])
 
 # Remove the data to predict from the dataset
-# Axis = 1 means that we will remove a column called 'Species'
-dataset = dataset.drop('Species', axis = 1)
+# We will just focus on columns 3 and 4 with petal width and length
+dataset = dataset.iloc[0:150, 2:4]
 
 #Preprocessing, we have 3 classes of species
 i=0
