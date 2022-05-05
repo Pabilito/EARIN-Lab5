@@ -12,3 +12,11 @@ plt.show()
 from sklearn.datasets import load_iris
 dataset = load_iris()
 print(dataset['DESCR'])
+
+#Petal width and length vs specie
+scatter_plot = plt.scatter(dataset.data[:,2], dataset.data[:,3], alpha=1, c=dataset.target, edgecolors='black')
+plt.colorbar(ticks=([0, 1, 2]))
+plt.title('Petals')
+plt.xlabel('Petal length')
+plt.ylabel('Petal width')
+plt.show()
