@@ -47,4 +47,13 @@ learningRate = 0.01                                                # Learning ra
 epochs = 100                                                       # Epochs
 iasHiddenValue = np.random.uniform(-1, 1)                          # Bias for hidden Layer
 BiasOutputValue = np.random.uniform(-1, 1)                         # Bias for output Layer
+error_array = []
 
+'''
+Fitting steps:
+-----------------
+1. Forward propagation
+2. One-hot-encoding
+3. Backward propagation
+4. Calculate errors
+'''
