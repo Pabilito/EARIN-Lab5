@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 import timeit
 import csv
-from sklearn.metrics import plot_confusion_matrix
+from sklearn.metrics import plot_confusion_matrix, mean_absolute_error
 import matplotlib.pyplot as plt
 
 #We create DataFrame by accessing our dataset
@@ -29,7 +29,8 @@ train_metrics, test_metrics, train_toPredict, test_toPredict = train_test_split(
 
 #Yes, I know, I could make a loop
 #But instead I almost made a flag of Nepal
-hidden_layers = [   (10),
+hidden_layers = [   '''
+                    (10),
                     (10, 10),
                     (10, 10, 10),
                     (10, 10, 10, 10),
@@ -58,6 +59,7 @@ hidden_layers = [   (10),
                     (100, 100, 100, 100, 100, 100, 100),
                     (100, 100, 100, 100, 100, 100, 100, 100),
                     (100, 100, 100, 100, 100, 100, 100, 100, 100),
+                    '''
                     (100, 100, 100, 100, 100, 100, 100, 100, 100, 100),
                 ]
 times = []
@@ -75,6 +77,9 @@ for layers in hidden_layers:
     iter = iter + 1
 
 iter = 0
+
+'''
+#Save results to file
 filename = "TestResults/MLP.csv"
 with open(filename,"w+") as my_csv:
     csvWriter = csv.writer(my_csv,delimiter=';')
@@ -82,7 +87,12 @@ with open(filename,"w+") as my_csv:
     for _ in times:
         csvWriter.writerow([hidden_layers[iter], times[iter], accuracies[iter]])
         iter = iter + 1
+'''
 
-fig=plot_confusion_matrix(clf, test_metrics, test_toPredict, display_labels=["Setosa","Versicolor","Virginica"])
-fig.figure_.suptitle("Confusion Matrix for Iris Dataset")
+fig = plot_confusion_matrix(clf, test_metrics, test_toPredict, display_labels=["Iris-Setosa","Iris-Versicolor","Iris-Virginica"])
+fig.figure_.suptitle("Confusion Matrix")
 plt.show()
+
+#Two cost functions to be done
+#1. Cross entropy 
+#https://towardsdatascience.com/cross-entropy-for-classification-d98e7f974451
