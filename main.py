@@ -30,12 +30,15 @@ train_metrics, test_metrics, train_toPredict, test_toPredict = train_test_split(
 #Yes, I know, I could make a loop
 #But instead I almost made a flag of Nepal
 hidden_layers = [   
+                    (100),
+                    (100, 100, 100, 100),
                     (100, 100, 100, 100, 100, 100, 100, 100, 100, 100),
                 ]
 times = []
 accuracies = []
 mse = []
 mae = []
+cross_entropy = []      #Perfect cross entropy is 0
 iter = 0
 iter2 = 0
 
@@ -50,20 +53,26 @@ for layers in hidden_layers:
     proba = clf.predict_proba(test_metrics)
     mse_temp = 0
     mae_temp = 0
+    ce_temp = 0
+    #COST Functions
     for flower in test_toPredict:
         if flower != "Iris-setosa":
             mse_temp = mse_temp + proba[iter2][0] * proba[iter2][0]
             mae_temp = mae_temp + proba[iter2][0]
+            ce_temp = ce_temp - np.log(proba[iter2][0])
         if flower != "Iris-versicolor":
             mse_temp = mse_temp + proba[iter2][1] * proba[iter2][1]
             mae_temp = mae_temp + proba[iter2][1]
+            ce_temp = ce_temp - np.log(proba[iter2][1])
         if flower != "Iris-virginica":
             mse_temp = mse_temp + proba[iter2][2] * proba[iter2][2]
             mae_temp = mae_temp + proba[iter2][2]
+            ce_temp = ce_temp - np.log(proba[iter2][2])
         iter2 = iter2 + 1
     iter = iter + 1
     mse.append(mse_temp/iter2)
     mae.append(mae_temp/iter2)
+    cross_entropy.append(ce_temp/iter2)
     iter2 = 0
 
 iter = 0
@@ -71,9 +80,9 @@ iter = 0
 filename = "TestResults/MLP2.csv"
 with open(filename,"w+") as my_csv:
     csvWriter = csv.writer(my_csv,delimiter=';')
-    csvWriter.writerow(["Hidden layer sizes","Train time","Accuracy", "MSE", "MAE"])
+    csvWriter.writerow(["Hidden layer sizes","Train time","Accuracy", "MSE", "MAE", "Cross-entropy"])
     for _ in times:
-        csvWriter.writerow([hidden_layers[iter], times[iter], accuracies[iter], mse[iter], mae[iter]])
+        csvWriter.writerow([hidden_layers[iter], times[iter], accuracies[iter], mse[iter], mae[iter], cross_entropy[iter]])
         iter = iter + 1
 
 fig = plot_confusion_matrix(clf, test_metrics, test_toPredict, display_labels=["Iris-Setosa","Iris-Versicolor","Iris-Virginica"])
