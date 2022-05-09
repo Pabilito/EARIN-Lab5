@@ -30,8 +30,35 @@ train_metrics, test_metrics, train_toPredict, test_toPredict = train_test_split(
 #Yes, I know, I could make a loop
 #But instead I almost made a flag of Nepal
 hidden_layers = [   
+                    (10),
+                    (10, 10),
+                    (10, 10, 10),
+                    (10, 10, 10, 10),
+                    (10, 10, 10, 10, 10),
+                    (10, 10, 10, 10, 10, 10),
+                    (10, 10, 10, 10, 10, 10, 10),
+                    (10, 10, 10, 10, 10, 10, 10, 10),
+                    (10, 10, 10, 10, 10, 10, 10, 10, 10),
+                    (10, 10, 10, 10, 10, 10, 10, 10, 10, 10),
+                    (25),
+                    (25, 25),
+                    (25, 25, 25),
+                    (25, 25, 25, 25),
+                    (25, 25, 25, 25, 25),
+                    (25, 25, 25, 25, 25, 25),
+                    (25, 25, 25, 25, 25, 25, 25),
+                    (25, 25, 25, 25, 25, 25, 25, 25),
+                    (25, 25, 25, 25, 25, 25, 25, 25, 25),
+                    (25, 25, 25, 25, 25, 25, 25, 25, 25, 25),
                     (100),
+                    (100, 100),
+                    (100, 100, 100),
                     (100, 100, 100, 100),
+                    (100, 100, 100, 100, 100),
+                    (100, 100, 100, 100, 100, 100),
+                    (100, 100, 100, 100, 100, 100, 100),
+                    (100, 100, 100, 100, 100, 100, 100, 100),
+                    (100, 100, 100, 100, 100, 100, 100, 100, 100),
                     (100, 100, 100, 100, 100, 100, 100, 100, 100, 100),
                 ]
 times = []
@@ -59,14 +86,17 @@ for layers in hidden_layers:
         if flower != "Iris-setosa":
             mse_temp = mse_temp + proba[iter2][0] * proba[iter2][0]
             mae_temp = mae_temp + proba[iter2][0]
+        else:
             ce_temp = ce_temp - np.log(proba[iter2][0])
         if flower != "Iris-versicolor":
             mse_temp = mse_temp + proba[iter2][1] * proba[iter2][1]
             mae_temp = mae_temp + proba[iter2][1]
+        else:
             ce_temp = ce_temp - np.log(proba[iter2][1])
         if flower != "Iris-virginica":
             mse_temp = mse_temp + proba[iter2][2] * proba[iter2][2]
             mae_temp = mae_temp + proba[iter2][2]
+        else:
             ce_temp = ce_temp - np.log(proba[iter2][2])
         iter2 = iter2 + 1
     iter = iter + 1
@@ -77,7 +107,7 @@ for layers in hidden_layers:
 
 iter = 0
 #Save results to file
-filename = "TestResults/MLP2.csv"
+filename = "TestResults/MLP.csv"
 with open(filename,"w+") as my_csv:
     csvWriter = csv.writer(my_csv,delimiter=';')
     csvWriter.writerow(["Hidden layer sizes","Train time","Accuracy", "MSE", "MAE", "Cross-entropy"])
@@ -88,7 +118,3 @@ with open(filename,"w+") as my_csv:
 fig = plot_confusion_matrix(clf, test_metrics, test_toPredict, display_labels=["Iris-Setosa","Iris-Versicolor","Iris-Virginica"])
 fig.figure_.suptitle("Confusion Matrix")
 plt.show()
-
-#Two cost functions to be done
-#1. Cross entropy 
-#https://towardsdatascience.com/cross-entropy-for-classification-d98e7f974451
