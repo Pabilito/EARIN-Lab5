@@ -29,42 +29,15 @@ train_metrics, test_metrics, train_toPredict, test_toPredict = train_test_split(
 
 #Yes, I know, I could make a loop
 #But instead I almost made a flag of Nepal
-hidden_layers = [   '''
-                    (10),
-                    (10, 10),
-                    (10, 10, 10),
-                    (10, 10, 10, 10),
-                    (10, 10, 10, 10, 10),
-                    (10, 10, 10, 10, 10, 10),
-                    (10, 10, 10, 10, 10, 10, 10),
-                    (10, 10, 10, 10, 10, 10, 10, 10),
-                    (10, 10, 10, 10, 10, 10, 10, 10, 10),
-                    (10, 10, 10, 10, 10, 10, 10, 10, 10, 10),
-                    (25),
-                    (25, 25),
-                    (25, 25, 25),
-                    (25, 25, 25, 25),
-                    (25, 25, 25, 25, 25),
-                    (25, 25, 25, 25, 25, 25),
-                    (25, 25, 25, 25, 25, 25, 25),
-                    (25, 25, 25, 25, 25, 25, 25, 25),
-                    (25, 25, 25, 25, 25, 25, 25, 25, 25),
-                    (25, 25, 25, 25, 25, 25, 25, 25, 25, 25),
-                    (100),
-                    (100, 100),
-                    (100, 100, 100),
-                    (100, 100, 100, 100),
-                    (100, 100, 100, 100, 100),
-                    (100, 100, 100, 100, 100, 100),
-                    (100, 100, 100, 100, 100, 100, 100),
-                    (100, 100, 100, 100, 100, 100, 100, 100),
-                    (100, 100, 100, 100, 100, 100, 100, 100, 100),
-                    '''
+hidden_layers = [   
                     (100, 100, 100, 100, 100, 100, 100, 100, 100, 100),
                 ]
 times = []
 accuracies = []
+mse = []
+mae = []
 iter = 0
+iter2 = 0
 
 for layers in hidden_layers:
     start = timeit.default_timer()
@@ -74,20 +47,34 @@ for layers in hidden_layers:
     stop = timeit.default_timer()
     times.append("{0:0.3f}".format(stop - start))
     accuracies.append(clf.score(test_metrics, test_toPredict))
+    proba = clf.predict_proba(test_metrics)
+    mse_temp = 0
+    mae_temp = 0
+    for flower in test_toPredict:
+        if flower != "Iris-setosa":
+            mse_temp = mse_temp + proba[iter2][0] * proba[iter2][0]
+            mae_temp = mae_temp + proba[iter2][0]
+        if flower != "Iris-versicolor":
+            mse_temp = mse_temp + proba[iter2][1] * proba[iter2][1]
+            mae_temp = mae_temp + proba[iter2][1]
+        if flower != "Iris-virginica":
+            mse_temp = mse_temp + proba[iter2][2] * proba[iter2][2]
+            mae_temp = mae_temp + proba[iter2][2]
+        iter2 = iter2 + 1
     iter = iter + 1
+    mse.append(mse_temp/iter2)
+    mae.append(mae_temp/iter2)
+    iter2 = 0
 
 iter = 0
-
-'''
 #Save results to file
-filename = "TestResults/MLP.csv"
+filename = "TestResults/MLP2.csv"
 with open(filename,"w+") as my_csv:
     csvWriter = csv.writer(my_csv,delimiter=';')
-    csvWriter.writerow(["Hidden layer sizes","Train time","Accuracy"])
+    csvWriter.writerow(["Hidden layer sizes","Train time","Accuracy", "MSE", "MAE"])
     for _ in times:
-        csvWriter.writerow([hidden_layers[iter], times[iter], accuracies[iter]])
+        csvWriter.writerow([hidden_layers[iter], times[iter], accuracies[iter], mse[iter], mae[iter]])
         iter = iter + 1
-'''
 
 fig = plot_confusion_matrix(clf, test_metrics, test_toPredict, display_labels=["Iris-Setosa","Iris-Versicolor","Iris-Virginica"])
 fig.figure_.suptitle("Confusion Matrix")
