@@ -25,7 +25,7 @@ metrics_list = list(dataset.columns)
 metrics = np.array(dataset)
 
 #Divide dataset into training and testing set, we can change random_state to change the shuffling of the data
-train_metrics, test_metrics, train_toPredict, test_toPredict = train_test_split(metrics, toPredict, test_size = 0.75, random_state = 42)
+train_metrics, test_metrics, train_toPredict, test_toPredict = train_test_split(metrics, toPredict, test_size = 0.25, random_state = 42)
 
 #Yes, I know, I could make a loop
 #But instead I almost made a flag of Nepal
