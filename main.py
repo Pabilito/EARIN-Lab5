@@ -25,55 +25,59 @@ metrics_list = list(dataset.columns)
 metrics = np.array(dataset)
 
 #Divide dataset into training and testing set, we can change random_state to change the shuffling of the data
-train_metrics, test_metrics, train_toPredict, test_toPredict = train_test_split(metrics, toPredict, test_size = 0.25, random_state = 42)
+train_metrics, test_metrics, train_toPredict, test_toPredict = train_test_split(
+    metrics, toPredict, test_size=0.25, random_state=42)
 
 #Yes, I know, I could make a loop
 #But instead I almost made a flag of Nepal
-hidden_layers = [   
-                    (10),
-                    (10, 10),
-                    (10, 10, 10),
-                    (10, 10, 10, 10),
-                    (10, 10, 10, 10, 10),
-                    (10, 10, 10, 10, 10, 10),
-                    (10, 10, 10, 10, 10, 10, 10),
-                    (10, 10, 10, 10, 10, 10, 10, 10),
-                    (10, 10, 10, 10, 10, 10, 10, 10, 10),
-                    (10, 10, 10, 10, 10, 10, 10, 10, 10, 10),
-                    (25),
-                    (25, 25),
-                    (25, 25, 25),
-                    (25, 25, 25, 25),
-                    (25, 25, 25, 25, 25),
-                    (25, 25, 25, 25, 25, 25),
-                    (25, 25, 25, 25, 25, 25, 25),
-                    (25, 25, 25, 25, 25, 25, 25, 25),
-                    (25, 25, 25, 25, 25, 25, 25, 25, 25),
-                    (25, 25, 25, 25, 25, 25, 25, 25, 25, 25),
-                    (100),
-                    (100, 100),
-                    (100, 100, 100),
-                    (100, 100, 100, 100),
-                    (100, 100, 100, 100, 100),
-                    (100, 100, 100, 100, 100, 100),
-                    (100, 100, 100, 100, 100, 100, 100),
-                    (100, 100, 100, 100, 100, 100, 100, 100),
-                    (100, 100, 100, 100, 100, 100, 100, 100, 100),
-                    (100, 100, 100, 100, 100, 100, 100, 100, 100, 100),
-                ]
+hidden_layers = [
+    (10),
+    (10, 10),
+    (10, 10, 10),
+    (10, 10, 10, 10),
+    (10, 10, 10, 10, 10),
+    (10, 10, 10, 10, 10, 10),
+    (10, 10, 10, 10, 10, 10, 10),
+    (10, 10, 10, 10, 10, 10, 10, 10),
+    (10, 10, 10, 10, 10, 10, 10, 10, 10),
+    (10, 10, 10, 10, 10, 10, 10, 10, 10, 10),
+    (25),
+    (25, 25),
+    (25, 25, 25),
+    (25, 25, 25, 25),
+    (25, 25, 25, 25, 25),
+    (25, 25, 25, 25, 25, 25),
+    (25, 25, 25, 25, 25, 25, 25),
+    (25, 25, 25, 25, 25, 25, 25, 25),
+    (25, 25, 25, 25, 25, 25, 25, 25, 25),
+    (25, 25, 25, 25, 25, 25, 25, 25, 25, 25),
+    (100),
+    (100, 100),
+    (100, 100, 100),
+    (100, 100, 100, 100),
+    (100, 100, 100, 100, 100),
+    (100, 100, 100, 100, 100, 100),
+    (100, 100, 100, 100, 100, 100, 100),
+    (100, 100, 100, 100, 100, 100, 100, 100),
+    (100, 100, 100, 100, 100, 100, 100, 100, 100),
+    (100, 100, 100, 100, 100, 100, 100, 100, 100, 100),
+]
 times = []
 accuracies = []
 mse = []
 mae = []
-cross_entropy = []      #Perfect cross entropy is 0
+cross_entropy = []  #Perfect cross entropy is 0
 iter = 0
 iter2 = 0
-
 for layers in hidden_layers:
     start = timeit.default_timer()
     #Solver is stochastic gradient descent
     #Also I added more iteration to assure convergence
-    clf = MLPClassifier(activation = "tanh", solver="sgd", hidden_layer_sizes=layers, random_state = 1, max_iter = 10000).fit(train_metrics, train_toPredict)
+    clf = MLPClassifier(activation="tanh",
+                        solver="sgd",
+                        hidden_layer_sizes=layers,
+                        random_state=1,
+                        max_iter=10000).fit(train_metrics, train_toPredict)
     stop = timeit.default_timer()
     times.append("{0:0.3f}".format(stop - start))
     accuracies.append(clf.score(test_metrics, test_toPredict))
@@ -100,9 +104,9 @@ for layers in hidden_layers:
             ce_temp = ce_temp - np.log(proba[iter2][2])
         iter2 = iter2 + 1
     iter = iter + 1
-    mse.append(mse_temp/iter2)
-    mae.append(mae_temp/iter2)
-    cross_entropy.append(ce_temp/iter2)
+    mse.append(mse_temp / iter2)
+    mae.append(mae_temp / iter2)
+    cross_entropy.append(ce_temp / iter2)
     iter2 = 0
 
 iter = 0
@@ -118,3 +122,4 @@ with open(filename,"w+") as my_csv:
 fig = plot_confusion_matrix(clf, test_metrics, test_toPredict, display_labels=["Iris-Setosa","Iris-Versicolor","Iris-Virginica"])
 fig.figure_.suptitle("Confusion Matrix")
 plt.show()
+
